@@ -285,7 +285,7 @@ function showNotification(message) {
 
 // Save to Google Sheets
 function saveToGoogleSheets(data) {
-    const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwssBD8NJroqoieQlKqi-6-16r4CLoZ3Eetx_0IYXvlurZd5NTuVT0PTgM1oFDHSh0XFg/exec';
     
     fetch(scriptURL, {
         method: 'POST',
