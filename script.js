@@ -77,37 +77,12 @@ function nextQuestion() {
         return;
     }
 
-    // Calculate score - CORRECTED: 20 points per question
+    // Calculate score - 20 points per question
     const currentQuestion = currentQuestions[currentQuestionIndex];
     if (selectedOption === currentQuestion.correct) {
-        score += 20; // ✅ 20 points per correct answer
+        score += 20;
     }
-// Show score
-function showScore() {
-    document.getElementById('quiz-section').classList.remove('active');
-    document.getElementById('score-section').classList.add('active');
-    document.getElementById('score-display').textContent = `${score}/100`;
-    
-    // نوٹ شامل کریں - یہ نیا کوڈ ہے
-    const note = document.createElement('div');
-    note.style.cssText = `
-        text-align: center;
-        margin-top: 20px;
-        padding: 15px;
-        background: #fff3cd;
-        border: 1px solid #ffeaa7;
-        border-radius: 10px;
-        color: #856404;
-        font-size: 16px;
-        line-height: 1.6;
-    `;
-    note.innerHTML = `
-        <strong>نوٹ:</strong> تمام شرکاء میں سے خوش قسمت فاتحین کا انتخاب کیا جائے گا۔ 
-        <strong>Al Kunooz</strong> کی طرف سے فاتحین کو خصوصی انعامات دیے جائیں گے۔
-    `;
-    
-    document.getElementById('score-section').appendChild(note);
-}
+
     currentQuestionIndex++;
     showQuestion();
 }
@@ -117,6 +92,16 @@ function showScore() {
     document.getElementById('quiz-section').classList.remove('active');
     document.getElementById('score-section').classList.add('active');
     document.getElementById('score-display').textContent = `${score}/100`;
+    
+    // Add note box
+    const noteBox = document.createElement('div');
+    noteBox.className = 'note-box';
+    noteBox.innerHTML = `
+        <strong>نوٹ:</strong> تمام شرکاء میں سے خوش قسمت فاتحین کا انتخاب کیا جائے گا۔ 
+        <strong>Al Kunooz</strong> کی طرف سے فاتحین کو خصوصی انعامات دیے جائیں گے۔
+    `;
+    
+    document.getElementById('score-section').appendChild(noteBox);
 }
 
 // Show form
@@ -134,7 +119,7 @@ document.getElementById('user-form').addEventListener('submit', function(e) {
         whatsapp: document.getElementById('whatsapp').value,
         address: document.getElementById('address').value,
         score: score,
-        timestamp: new Date().toLocaleString('ur-PK')
+        timestamp: new Date().toLocaleString('en-IN')
     };
     
     // Save data
@@ -211,7 +196,7 @@ function shareOnWhatsApp() {
 
 🏆 My Score: ${score}/100
 👤 Name: ${userData.name}
-📅 Date: ${new Date().toLocaleDateString('en-PK')}
+📅 Date: ${new Date().toLocaleDateString('en-IN')}
 
 I got ${scoreText} in the Islamic Quiz! Test your knowledge of Islam and participate in this amazing quiz.
 
@@ -231,38 +216,30 @@ function shareOnFacebook() {
 
 // Download as Image
 function downloadAsImage() {
-    // For now, we'll create a simple image share
-    const shareContent = `
-        🏆 Islamic Quiz Result 🏆
-        Score: ${score}/100
-        Name: ${userData.name}
-        Date: ${new Date().toLocaleDateString()}
-        
-        Test your Islamic knowledge at: ${window.location.href}
-    `;
-    
-    // Create a canvas element to generate image
     alert('📸 Image download feature will be available soon! For now, you can share your score via WhatsApp or Facebook.');
 }
 
 // Save to Google Sheets
 function saveToGoogleSheets(data) {
-    // You will add your Google Apps Script URL here
     const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
     
     fetch(scriptURL, {
         method: 'POST',
+        mode: 'no-cors',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => console.log('Data saved successfully!'))
-    .catch(error => console.error('Error:', error));
+    .then(() => {
+        console.log('Data sent to Google Sheets');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
     
-    // Temporarily show data in console
-    console.log('📊 Saving data:', data);
+    console.log('📊 User Data:', data);
 }
 
 // Start the app
-window.onload = initApp;
+window.onload = initApp; 
