@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Quiz Competition | اسلامک کوئز مقابلہ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Quiz Section -->
+        <div id="quiz-section" class="section active">
+            <h1>🌙 Islamic Quiz Competition</h1>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div id="question-container">
+                <div id="question-number"></div>
+                <div id="question"></div>
+                <div id="options"></div>
+            </div>
+            <button id="next-btn" onclick="nextQuestion()">➡️ Next Question</button>
+        </div>
+
+        <!-- Score Section -->
+        <div id="score-section" class="section">
+            <h1>🏆 Your Score</h1>
+            <div id="score-display"></div>
+            <button onclick="showForm()">🎁 Claim Your Gift</button>
+        </div>
+
+        <!-- Form Section -->
+        <div id="form-section" class="section">
+            <h1>📝 Personal Information</h1>
+            <form id="user-form">
+                <input type="text" id="name" placeholder="📛 Your Full Name" required>
+                <input type="tel" id="whatsapp" placeholder="📱 WhatsApp Number (923001234567)" required>
+                <textarea id="address" placeholder="🏠 Complete Delivery Address (For Gift)" required></textarea>
+                <button type="submit">✅ Submit Information</button>
+            </form>
+        </div>
+
+        <!-- Congratulations Section -->
+        <div id="congrats-section" class="section">
+            <div id="congrats-message"></div>
+            <div class="share-buttons">
+                <button onclick="shareOnWhatsApp()">📱 Share on WhatsApp</button>
+                <button onclick="shareOnFacebook()">📘 Share on Facebook</button>
+                <button onclick="downloadAsImage()">🖼️ Save as Image</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
