@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    direction: rtl;
 }
 
 body {
@@ -71,10 +70,11 @@ h1 {
 #question {
     font-size: 20px;
     margin-bottom: 20px;
-    color: #000000; /* Black color for questions */
+    color: #000000;
     text-align: center;
     font-weight: 600;
     line-height: 1.8;
+    direction: rtl;
 }
 
 .option {
@@ -89,8 +89,9 @@ h1 {
     transition: all 0.3s ease;
     font-size: 16px;
     text-align: right;
-    color: #000000; /* Black text for unselected options */
+    color: #000000;
     font-weight: 500;
+    direction: rtl;
 }
 
 .option:hover {
@@ -133,9 +134,10 @@ input, textarea {
     border: 2px solid #e9ecef;
     border-radius: 10px;
     font-size: 16px;
-    text-align: right;
+    text-align: left;
     transition: border-color 0.3s ease;
     color: #000000;
+    direction: ltr;
 }
 
 input:focus, textarea:focus {
@@ -154,6 +156,19 @@ textarea {
     color: #667eea;
     margin: 20px 0;
     font-weight: bold;
+}
+
+.note-box {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 10px;
+    color: #856404;
+    font-size: 16px;
+    line-height: 1.6;
+    direction: rtl;
 }
 
 .share-buttons {
@@ -185,4 +200,4 @@ textarea {
     #question {
         font-size: 18px;
     }
-  }
+} 
