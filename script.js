@@ -82,7 +82,32 @@ function nextQuestion() {
     if (selectedOption === currentQuestion.correct) {
         score += 20; // ✅ 20 points per correct answer
     }
-
+// Show score
+function showScore() {
+    document.getElementById('quiz-section').classList.remove('active');
+    document.getElementById('score-section').classList.add('active');
+    document.getElementById('score-display').textContent = `${score}/100`;
+    
+    // نوٹ شامل کریں - یہ نیا کوڈ ہے
+    const note = document.createElement('div');
+    note.style.cssText = `
+        text-align: center;
+        margin-top: 20px;
+        padding: 15px;
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 10px;
+        color: #856404;
+        font-size: 16px;
+        line-height: 1.6;
+    `;
+    note.innerHTML = `
+        <strong>نوٹ:</strong> تمام شرکاء میں سے خوش قسمت فاتحین کا انتخاب کیا جائے گا۔ 
+        <strong>Al Kunooz</strong> کی طرف سے فاتحین کو خصوصی انعامات دیے جائیں گے۔
+    `;
+    
+    document.getElementById('score-section').appendChild(note);
+}
     currentQuestionIndex++;
     showQuestion();
 }
