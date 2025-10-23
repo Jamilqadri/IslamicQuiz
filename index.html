@@ -1,12 +1,3 @@
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islamic Quiz Competition | اسلامک کوئز مقابلہ</title>
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- یہ نئی لائن شامل کریں -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</head>
 <!DOCTYPE html>
 <html lang="ur">
 <head>
@@ -14,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Islamic Quiz Competition | اسلامک کوئز مقابلہ</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -35,6 +27,10 @@
         <div id="score-section" class="section">
             <h1>🏆 Your Score</h1>
             <div id="score-display"></div>
+            <div class="note-box">
+                <strong>نوٹ:</strong> تمام شرکاء میں سے خوش قسمت فاتحین کا انتخاب کیا جائے گا۔ 
+                <strong>Al Kunooz</strong> کی طرف سے فاتحین کو خصوصی انعامات دیے جائیں گے۔
+            </div>
             <button onclick="showForm()">🎁 View Score Board</button>
         </div>
 
@@ -53,9 +49,42 @@
         <div id="congrats-section" class="section">
             <div id="congrats-message"></div>
             <div class="share-buttons">
+                <button onclick="showShareTemplate()">🖼️ Create Share Card</button>
                 <button onclick="shareOnWhatsApp()">📱 Share on WhatsApp</button>
                 <button onclick="shareOnFacebook()">📘 Share on Facebook</button>
-                <button onclick="downloadAsImage()">🖼️ Save as Image</button>
+            </div>
+        </div>
+
+        <!-- Share Template Section -->
+        <div id="share-template-section" class="section">
+            <div class="share-template" id="share-template">
+                <div class="template-header">
+                    <div class="islamic-pattern"></div>
+                    <h2>🌙 اسلامی کوئز مقابلہ</h2>
+                    <div class="score-badge" id="template-badge">🏆</div>
+                </div>
+                
+                <div class="template-body">
+                    <div class="user-score" id="template-score">100/100</div>
+                    <div class="user-name" id="template-name">صارف کا نام</div>
+                    <div class="achievement-message" id="template-message">شاندار کارکردگی!</div>
+                    
+                    <div class="template-footer">
+                        <div class="qr-code">📱</div>
+                        <p>کوئز میں حصہ لیں!</p>
+                        <div class="website" id="template-website">alkunooz.com</div>
+                    </div>
+                </div>
+                
+                <div class="template-design">
+                    <div class="islamic-art">🕌</div>
+                </div>
+            </div>
+            
+            <div class="template-buttons">
+                <button onclick="downloadTemplateAsImage()">💾 تصویر ڈاؤنلوڈ کریں</button>
+                <button onclick="shareTemplateOnWhatsApp()">📱 واٹس ایپ پر شیئر کریں</button>
+                <button onclick="backToCongratulations()">↩️ واپس جائیں</button>
             </div>
         </div>
     </div>
