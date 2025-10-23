@@ -92,16 +92,6 @@ function showScore() {
     document.getElementById('quiz-section').classList.remove('active');
     document.getElementById('score-section').classList.add('active');
     document.getElementById('score-display').textContent = `${score}/100`;
-    
-    // Add note box
-    const noteBox = document.createElement('div');
-    noteBox.className = 'note-box';
-    noteBox.innerHTML = `
-        <strong>نوٹ:</strong> تمام شرکاء میں سے خوش قسمت فاتحین کا انتخاب کیا جائے گا۔ 
-        <strong>Al Kunooz</strong> کی طرف سے فاتحین کو خصوصی انعامات دیے جائیں گے۔
-    `;
-    
-    document.getElementById('score-section').appendChild(noteBox);
 }
 
 // Show form
@@ -122,7 +112,7 @@ document.getElementById('user-form').addEventListener('submit', function(e) {
         timestamp: new Date().toLocaleString('en-IN')
     };
     
-    // Save data
+    // Save data to Google Sheets
     saveToGoogleSheets(userData);
     
     // Show congratulations
@@ -179,6 +169,106 @@ function showCongratulations() {
     document.getElementById('congrats-message').innerHTML = message;
 }
 
+// Show share template
+function showShareTemplate() {
+    document.getElementById('congrats-section').classList.remove('active');
+    document.getElementById('share-template-section').classList.add('active');
+    
+    // Update template with user data
+    document.getElementById('template-score').textContent = `${score}/100`;
+    document.getElementById('template-name').textContent = userData.name;
+    
+    // Set achievement message based on score
+    let message = "";
+    let badge = "🏆";
+    
+    if (score === 100) {
+        message = "ماشاءاللہ! کامل اسکور!";
+        badge = "🏆";
+    } else if (score >= 80) {
+        message = "شاندار کارکردگی!";
+        badge = "🌟";
+    } else if (score >= 60) {
+        message = "بہت خوب!";
+        badge = "👍";
+    } else {
+        message = "شکریہ شرکت کا!";
+        badge = "📚";
+    }
+    
+    document.getElementById('template-message').textContent = message;
+    document.getElementById('template-badge').textContent = badge;
+    
+    // Set website URL
+    document.getElementById('template-website').textContent = "alkunooz.com";
+}
+
+// Download template as image
+function downloadTemplateAsImage() {
+    showNotification('🔄 تصویر تیار ہو رہی ہے...');
+    
+    const shareTemplate = document.getElementById('share-template');
+    
+    html2canvas(shareTemplate, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: null,
+        scrollX: 0,
+        scrollY: 0
+    }).then(canvas => {
+        // Create download link
+        const link = document.createElement('a');
+        link.download = `islamic-quiz-${userData.name}-${score}.png`;
+        link.href = canvas.toDataURL('image/png');
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showNotification('✅ تصویر ڈاؤنلوڈ ہو گئی!');
+    }).catch(error => {
+        console.error('Error:', error);
+        showNotification('❌ تصویر ڈاؤنلوڈ نہیں ہو سکی۔ دوبارہ کوشش کریں۔');
+    });
+}
+
+// Share template on WhatsApp
+function shareTemplateOnWhatsApp() {
+    let scoreText = "";
+    if (score === 100) {
+        scoreText = "مکمل اسکور 🏆";
+    } else if (score >= 80) {
+        scoreText = "شاندار اسکور 🌟";
+    } else if (score >= 60) {
+        scoreText = "اچھا اسکور 👍";
+    } else {
+        scoreText = "کوئز اسکور 📚";
+    }
+    
+    const text = `🌙 *اسلامی کوئز مقابلہ* 🌙
+
+🏆 میرا اسکور: ${score}/100
+👤 نام: ${userData.name}
+📅 تاریخ: ${new Date().toLocaleDateString('ur-PK')}
+
+میں نے ${scoreText} حاصل کیا! آپ بھی اپنے اسلامی علم کا测验 کریں۔
+
+🔗 لنک: https://alkunooz.com
+
+#اسلامی_کوئز #AlKunooz`;
+
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+}
+
+// Back to congratulations
+function backToCongratulations() {
+    document.getElementById('share-template-section').classList.remove('active');
+    document.getElementById('congrats-section').classList.add('active');
+}
+
 // Share on WhatsApp
 function shareOnWhatsApp() {
     let scoreText = "";
@@ -200,9 +290,9 @@ function shareOnWhatsApp() {
 
 I got ${scoreText} in the Islamic Quiz! Test your knowledge of Islam and participate in this amazing quiz.
 
-🔗 Link: ${window.location.href}
+🔗 Link: https://alkunooz.com
 
-#IslamicQuiz #MuslimQuiz`;
+#IslamicQuiz #MuslimQuiz #AlKunooz`;
 
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
@@ -210,42 +300,8 @@ I got ${scoreText} in the Islamic Quiz! Test your knowledge of Islam and partici
 
 // Share on Facebook
 function shareOnFacebook() {
-    const url = encodeURIComponent(window.location.href);
+    const url = encodeURIComponent('https://alkunooz.com');
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-}
-
-// Download as Image - FIXED VERSION
-function downloadAsImage() {
-    // Show loading message
-    showNotification('🔄 Creating your image...');
-    
-    setTimeout(() => {
-        const congratsSection = document.getElementById('congrats-section');
-        
-        html2canvas(congratsSection, {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#ffffff',
-            scrollX: 0,
-            scrollY: 0
-        }).then(canvas => {
-            // Create download link
-            const link = document.createElement('a');
-            link.download = `islamic-quiz-${userData.name}-${score}.png`;
-            link.href = canvas.toDataURL('image/png');
-            
-            // Trigger download
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showNotification('✅ Image downloaded successfully!');
-        }).catch(error => {
-            console.error('Error:', error);
-            showNotification('❌ Failed to download image. Please try again.');
-        });
-    }, 1000);
 }
 
 // Notification function
@@ -286,7 +342,7 @@ function showNotification(message) {
 // Save to Google Sheets
 function saveToGoogleSheets(data) {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwssBD8NJroqoieQlKqi-6-16r4CLoZ3Eetx_0IYXvlurZd5NTuVT0PTgM1oFDHSh0XFg/exec';
-    
+
     fetch(scriptURL, {
         method: 'POST',
         mode: 'no-cors',
@@ -296,14 +352,14 @@ function saveToGoogleSheets(data) {
         }
     })
     .then(() => {
-        console.log('Data sent to Google Sheets');
+        console.log('✅ Data sent to Google Sheets');
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('❌ Error:', error);
     });
     
     console.log('📊 User Data:', data);
 }
 
 // Start the app
-window.onload = initApp; 
+window.onload = initApp;
