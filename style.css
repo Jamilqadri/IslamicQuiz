@@ -201,3 +201,60 @@ textarea {
         font-size: 18px;
     }
 } 
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        border-radius: 15px;
+    }
+    
+    .section {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    #question {
+        font-size: 18px;
+    }
+}
+
+/* === یہ نیا کوڈ یہاں شامل کریں === */
+/* Congratulations section کو image کے لیے optimize کریں */
+#congrats-section {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+}
+
+#congrats-message {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Image میں اچھا دکھائی دے اس کے لیے */
+#congrats-message h2 {
+    color: white;
+    margin-bottom: 15px;
+    font-size: 28px;
+}
+
+#congrats-message div {
+    font-size: 60px;
+    font-weight: bold;
+    margin: 20px 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+#congrats-message p {
+    font-size: 18px;
+    margin: 10px 0;
+    line-height: 1.6;
+    }
