@@ -243,3 +243,68 @@ function saveToGoogleSheets(data) {
 
 // Start the app
 window.onload = initApp; 
+// Start the app
+window.onload = initApp;
+
+// === یہ نیا کوڈ یہاں شامل کریں ===
+
+// Download as Image - اصل congratulations section کو image بنائے
+function downloadAsImage() {
+    const congratsSection = document.getElementById('congrats-section');
+    
+    // عارضی طور پر share buttons ہٹائیں
+    const shareButtons = document.querySelector('.share-buttons');
+    const originalDisplay = shareButtons.style.display;
+    shareButtons.style.display = 'none';
+    
+    html2canvas(congratsSection, {
+        scale: 2, // ہائی کوالٹی
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+    }).then(canvas => {
+        // share buttons واپس لائیں
+        shareButtons.style.display = originalDisplay;
+        
+        // image ڈاؤنلوڈ کریں
+        const link = document.createElement('a');
+        link.download = `islamic-quiz-${userData.name}-${score}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        // confirmation notification
+        showNotification('✅ Image downloaded successfully!');
+    }).catch(error => {
+        // share buttons واپس لائیں
+        shareButtons.style.display = originalDisplay;
+        showNotification('❌ Failed to download image. Please try again.');
+    });
+}
+
+// Notification دکھانے کا فنکشن
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #667eea;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        z-index: 1000;
+        font-size: 16px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // 3 سیکنڈ بعد notification ہٹائیں
+    setTimeout(() => {
+        if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+        }
+    }, 3000);
+}
