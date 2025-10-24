@@ -2,25 +2,6 @@
 
 console.log("Script loaded successfully!");
 
-// Quiz data and questions
-const quizQuestions = [
-    {
-        question: "What is the first month of the Islamic calendar?",
-        options: ["Muharram", "Ramadan", "Shawwal", "Dhul-Hijjah"],
-        correct: 0
-    },
-    {
-        question: "How many pillars of Islam are there?",
-        options: ["4", "5", "6", "7"],
-        correct: 1
-    },
-    {
-        question: "Which prayer is performed at dawn?",
-        options: ["Fajr", "Dhuhr", "Asr", "Isha"],
-        correct: 0
-    }
-];
-
 class Quiz {
     constructor() {
         this.currentQuestion = 0;
@@ -57,7 +38,7 @@ class Quiz {
     // Setup event listeners
     setupEventListeners() {
         console.log("Setting up event listeners");
-        
+
         // Welcome screen start button
         const startQuizBtn = document.getElementById('startQuiz');
         if (startQuizBtn) {
@@ -111,19 +92,27 @@ class Quiz {
                 this.shareOnFacebook();
             });
         }
+
+        // Download Image button
+        const downloadImage = document.getElementById('downloadImage');
+        if (downloadImage) {
+            downloadImage.addEventListener('click', () => {
+                this.downloadScoreImage();
+            });
+        }
     }
 
     // Collect user information
     collectUserInfo() {
         console.log("Collecting user info");
-        
+
         this.userInfo.name = document.getElementById('fullName').value;
         this.userInfo.contact = document.getElementById('contactNumber').value;
         this.userInfo.address = document.getElementById('address').value;
         this.userInfo.state = document.getElementById('state').value;
-        
+
         console.log("User info:", this.userInfo);
-        
+
         if (this.validateUserInfo()) {
             this.startQuiz();
         }
@@ -150,18 +139,18 @@ class Quiz {
     // Display current question
     displayQuestion() {
         console.log("Displaying question:", this.currentQuestion);
-        
+
         const question = quizQuestions[this.currentQuestion];
         document.getElementById('questionText').textContent = question.question;
-        
-        // Update progress
-        const progress = ((this.currentQuestion) / quizQuestions.length) * 100;
+
+        // Update progress (5 questions fixed)
+        const progress = ((this.currentQuestion) / 5) * 100;
         document.getElementById('progress').style.width = progress + '%';
-        document.getElementById('questionCount').textContent = `Question ${this.currentQuestion + 1}/${quizQuestions.length}`;
-        
+        document.getElementById('questionCount').textContent = `Question ${this.currentQuestion + 1}/5`;
+
         const optionsContainer = document.getElementById('optionsContainer');
         optionsContainer.innerHTML = '';
-        
+
         question.options.forEach((option, index) => {
             const button = document.createElement('button');
             button.textContent = option;
@@ -172,10 +161,10 @@ class Quiz {
             });
             optionsContainer.appendChild(button);
         });
-        
+
         // Start timer
         this.startTimer();
-        
+
         // Disable next button initially
         document.getElementById('nextQuestion').disabled = true;
     }
@@ -184,14 +173,22 @@ class Quiz {
     startTimer() {
         this.timeLeft = 10;
         document.getElementById('timer').textContent = this.timeLeft;
+        document.getElementById('timer').style.background = 'var(--gold)';
         
         if (this.timer) {
             clearInterval(this.timer);
         }
-        
+
         this.timer = setInterval(() => {
             this.timeLeft--;
             document.getElementById('timer').textContent = this.timeLeft;
+            
+            // Timer color change
+            if (this.timeLeft <= 3) {
+                document.getElementById('timer').style.background = '#ff4444';
+            } else if (this.timeLeft <= 7) {
+                document.getElementById('timer').style.background = '#ffaa00';
+            }
             
             if (this.timeLeft <= 0) {
                 clearInterval(this.timer);
@@ -200,29 +197,35 @@ class Quiz {
         }, 1000);
     }
 
-    // Handle option selection
+    // Handle option selection with time-based scoring
     selectOption(selectedIndex) {
         console.log("Selected option:", selectedIndex);
+        
+        // Calculate score based on time
+        let questionScore = 20;
+        if (this.timeLeft < 10) {
+            questionScore = Math.max(0, 20 - ((10 - this.timeLeft) * 2));
+        }
         
         // Clear timer
         if (this.timer) {
             clearInterval(this.timer);
         }
-        
+
         const question = quizQuestions[this.currentQuestion];
         const options = document.querySelectorAll('.option-btn');
-        
+
         // Mark selected option
         options.forEach((option, index) => {
             if (index === selectedIndex) {
                 option.classList.add('selected');
                 if (index === question.correct) {
-                    this.score += 20; // 20 points per question (total 100 for 5 questions)
-                    console.log("Correct! Score:", this.score);
+                    this.score += questionScore;
+                    console.log(`Correct! Time: ${this.timeLeft}s, Score: +${questionScore}, Total: ${this.score}`);
                 }
             }
         });
-        
+
         // Enable next button
         document.getElementById('nextQuestion').disabled = false;
     }
@@ -230,8 +233,8 @@ class Quiz {
     // Move to next question
     nextQuestion() {
         this.currentQuestion++;
-        
-        if (this.currentQuestion < quizQuestions.length) {
+
+        if (this.currentQuestion < 5) { // Fixed 5 questions
             this.displayQuestion();
         } else {
             this.endQuiz();
@@ -241,7 +244,7 @@ class Quiz {
     // End quiz and show results
     endQuiz() {
         console.log("Ending quiz. Final score:", this.score);
-        
+
         this.showScreen('resultScreen');
         this.displayResults();
         this.saveQuizData();
@@ -256,7 +259,7 @@ class Quiz {
 
         // Result message based on score
         let message = '';
-        
+
         if (this.score >= 80) {
             message = 'Excellent! You have great Islamic knowledge. 🎉';
         } else if (this.score >= 60) {
@@ -266,9 +269,9 @@ class Quiz {
         } else {
             message = 'Keep studying! Islam has vast knowledge to explore. 🌟';
         }
-        
+
         document.getElementById('resultMessage').textContent = message;
-        
+
         // Update leaderboard
         this.updateLeaderboard();
     }
@@ -306,19 +309,31 @@ class Quiz {
         window.open(url, '_blank');
     }
 
+    // Download Score as Image
+    downloadScoreImage() {
+        alert("Download feature would work with html2canvas library");
+        // For actual implementation, include html2canvas library
+        // html2canvas(document.querySelector('.result-card')).then(canvas => {
+        //     const link = document.createElement('a');
+        //     link.download = `islamic-quiz-score-${this.score}.png`;
+        //     link.href = canvas.toDataURL();
+        //     link.click();
+        // });
+    }
+
     // Restart quiz
     restartQuiz() {
         console.log("Restarting quiz");
         this.currentQuestion = 0;
         this.score = 0;
         this.userInfo = { name: '', contact: '', address: '', state: '' };
-        
+
         // Clear form fields
         document.getElementById('fullName').value = '';
         document.getElementById('contactNumber').value = '';
         document.getElementById('address').value = '';
         document.getElementById('state').value = '';
-        
+
         this.showScreen('welcomeScreen');
     }
 
@@ -330,7 +345,7 @@ class Quiz {
             address: this.userInfo.address,
             state: this.userInfo.state,
             score: this.score,
-            totalQuestions: quizQuestions.length,
+            totalQuestions: 5,
             timestamp: new Date().toISOString()
         };
 
