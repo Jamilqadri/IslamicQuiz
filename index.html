@@ -25,7 +25,7 @@
                 </div>
                 <h2>Welcome to Islamic Quiz</h2>
                 <p>Daily Challenge: 5 Islamic Questions</p>
-                
+
                 <div class="features">
                     <div class="feature">
                         <span>⏱️</span>
@@ -42,51 +42,10 @@
                 </div>
 
                 <button id="startQuiz" class="btn-primary">Start Quiz</button>
-                
+
                 <div class="daily-notice">
                     <p>📅 You can play once per day</p>
                 </div>
-            </div>
-        </div>
-
-        <!-- User Information Screen -->
-        <div id="userInfoScreen" class="screen">
-            <div class="form-card">
-                <h2>Enter Your Information</h2>
-                <form id="userInfoForm">
-                    <div class="form-group">
-                        <label for="fullName">Full Name *</label>
-                        <input type="text" id="fullName" required placeholder="Enter your full name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="contactNumber">Contact Number *</label>
-                        <input type="tel" id="contactNumber" required placeholder="Enter your phone number">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="address">Complete Address *</label>
-                        <textarea id="address" rows="3" required placeholder="Enter your complete address"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="state">State *</label>
-                        <select id="state" required>
-                            <option value="">Select your state</option>
-                            <option value="up">Uttar Pradesh</option>
-                            <option value="bihar">Bihar</option>
-                            <option value="mp">Madhya Pradesh</option>
-                            <option value="mh">Maharashtra</option>
-                            <option value="rj">Rajasthan</option>
-                            <option value="pb">Punjab</option>
-                            <option value="hr">Haryana</option>
-                            <option value="dl">Delhi</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn-primary">Start Quiz</button>
-                </form>
             </div>
         </div>
 
@@ -107,7 +66,7 @@
                 <!-- Question -->
                 <div class="question-section">
                     <h2 id="questionText" class="question-text"></h2>
-                    
+
                     <!-- Options -->
                     <div class="options-container" id="optionsContainer">
                         <!-- Options will be populated by JavaScript -->
@@ -130,21 +89,54 @@
                         <small>/100</small>
                     </div>
                     <h2>Congratulations!</h2>
-                    <p id="resultMessage">You have completed the quiz</p>
+                    <div id="resultMessage">
+                        <!-- Result message will be inserted here by JavaScript -->
+                    </div>
                 </div>
 
-                <!-- User Info Summary -->
-                <div class="user-summary">
-                    <h4>Your Information</h4>
-                    <p><strong>Name:</strong> <span id="summaryName"></span></p>
-                    <p><strong>Score:</strong> <span id="summaryScore"></span>/100</p>
-                    <p><strong>State:</strong> <span id="summaryState"></span></p>
+                <!-- User Info Form AFTER Results -->
+                <div class="user-info-form">
+                    <h3>Enter Your Information to Save Score</h3>
+                    <form id="userInfoForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" required placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contactNumber">Contact Number *</label>
+                            <input type="tel" id="contactNumber" required placeholder="Enter your phone number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Complete Address *</label>
+                            <textarea id="address" rows="3" required placeholder="Enter your complete address"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="state">State *</label>
+                            <select id="state" required>
+                                <option value="">Select your state</option>
+                                <option value="up">Uttar Pradesh</option>
+                                <option value="bihar">Bihar</option>
+                                <option value="mp">Madhya Pradesh</option>
+                                <option value="mh">Maharashtra</option>
+                                <option value="rj">Rajasthan</option>
+                                <option value="pb">Punjab</option>
+                                <option value="hr">Haryana</option>
+                                <option value="dl">Delhi</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Save My Score</button>
+                    </form>
                 </div>
 
                 <!-- Sharing Options -->
                 <div class="share-section">
                     <h3>Share Your Score</h3>
-                    
+
                     <div class="share-buttons">
                         <button id="shareWhatsApp" class="btn-share whatsapp">
                             📱 Share on WhatsApp
