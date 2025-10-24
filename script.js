@@ -166,7 +166,7 @@ class Quiz {
         console.log('Data to be sent to Google Sheets:', quizData);
         
         // Example implementation (you'll need to set up Google Apps Script)
-        // fetch('https://script.google.com/macros/s/AKfycbykadcKkBOa8CP6CmPcffQqZ4qu1K5j0h2hZKJ8qFm7lJ0DrC3jEw5tfY_EFY0m81Rw/exec', {
+        // fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
         //     method: 'POST',
         //     headers: {
         //         'Content-Type': 'application/json',
