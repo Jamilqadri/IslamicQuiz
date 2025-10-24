@@ -14,7 +14,19 @@ class Quiz {
         };
         this.timer = null;
         this.timeLeft = 10;
+        this.hasPlayedToday = this.checkDailyPlay();
         console.log("Quiz class initialized");
+    }
+
+    // Check if user already played today
+    checkDailyPlay() {
+        const lastPlay = localStorage.getItem('lastQuizPlay');
+        if (lastPlay) {
+            const lastPlayDate = new Date(lastPlay);
+            const today = new Date();
+            return lastPlayDate.toDateString() === today.toDateString();
+        }
+        return false;
     }
 
     // Initialize the quiz
@@ -22,6 +34,13 @@ class Quiz {
         console.log("Initializing quiz...");
         this.showScreen('welcomeScreen');
         this.setupEventListeners();
+        
+        // If already played today, show message
+        if (this.hasPlayedToday) {
+            document.getElementById('startQuiz').disabled = true;
+            document.querySelector('.daily-notice p').textContent = 
+                "📅 You have already played today. Come back tomorrow!";
+        }
     }
 
     // Show specific screen
@@ -43,20 +62,10 @@ class Quiz {
         const startQuizBtn = document.getElementById('startQuiz');
         if (startQuizBtn) {
             startQuizBtn.addEventListener('click', () => {
-                console.log("Start quiz button clicked");
-                this.showScreen('userInfoScreen');
-            });
-        } else {
-            console.error("Start quiz button not found!");
-        }
-
-        // User info form submission
-        const userInfoForm = document.getElementById('userInfoForm');
-        if (userInfoForm) {
-            userInfoForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                console.log("User info form submitted");
-                this.collectUserInfo();
+                if (!this.hasPlayedToday) {
+                    console.log("Start quiz button clicked");
+                    this.startQuiz();
+                }
             });
         }
 
@@ -74,7 +83,17 @@ class Quiz {
         if (playAgainBtn) {
             playAgainBtn.addEventListener('click', () => {
                 console.log("Play again button clicked");
-                this.restartQuiz();
+                this.showScreen('userInfoScreen');
+            });
+        }
+
+        // User info form submission
+        const userInfoForm = document.getElementById('userInfoForm');
+        if (userInfoForm) {
+            userInfoForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                console.log("User info form submitted");
+                this.collectUserInfo();
             });
         }
 
@@ -102,32 +121,7 @@ class Quiz {
         }
     }
 
-    // Collect user information
-    collectUserInfo() {
-        console.log("Collecting user info");
-
-        this.userInfo.name = document.getElementById('fullName').value;
-        this.userInfo.contact = document.getElementById('contactNumber').value;
-        this.userInfo.address = document.getElementById('address').value;
-        this.userInfo.state = document.getElementById('state').value;
-
-        console.log("User info:", this.userInfo);
-
-        if (this.validateUserInfo()) {
-            this.startQuiz();
-        }
-    }
-
-    // Validate user information
-    validateUserInfo() {
-        if (!this.userInfo.name || !this.userInfo.contact || !this.userInfo.address || !this.userInfo.state) {
-            alert('Please fill all fields');
-            return false;
-        }
-        return true;
-    }
-
-    // Start the quiz
+    // Start the quiz (direct without form)
     startQuiz() {
         console.log("Starting quiz");
         this.showScreen('quizScreen');
@@ -173,7 +167,7 @@ class Quiz {
     startTimer() {
         this.timeLeft = 10;
         document.getElementById('timer').textContent = this.timeLeft;
-        document.getElementById('timer').style.background = 'var(--gold)';
+        document.getElementById('timer').style.background = '#25D366'; // Green
         
         if (this.timer) {
             clearInterval(this.timer);
@@ -183,11 +177,11 @@ class Quiz {
             this.timeLeft--;
             document.getElementById('timer').textContent = this.timeLeft;
             
-            // Timer color change
+            // Timer color change - Green to Red
             if (this.timeLeft <= 3) {
-                document.getElementById('timer').style.background = '#ff4444';
+                document.getElementById('timer').style.background = '#ff4444'; // Red
             } else if (this.timeLeft <= 7) {
-                document.getElementById('timer').style.background = '#ffaa00';
+                document.getElementById('timer').style.background = '#ffaa00'; // Orange
             }
             
             if (this.timeLeft <= 0) {
@@ -201,7 +195,7 @@ class Quiz {
     selectOption(selectedIndex) {
         console.log("Selected option:", selectedIndex);
         
-        // Calculate score based on time
+        // Calculate score based on time (20 - (10-time)*2)
         let questionScore = 20;
         if (this.timeLeft < 10) {
             questionScore = Math.max(0, 20 - ((10 - this.timeLeft) * 2));
@@ -234,7 +228,7 @@ class Quiz {
     nextQuestion() {
         this.currentQuestion++;
 
-        if (this.currentQuestion < 5) { // Fixed 5 questions
+        if (this.currentQuestion < 5) {
             this.displayQuestion();
         } else {
             this.endQuiz();
@@ -245,32 +239,40 @@ class Quiz {
     endQuiz() {
         console.log("Ending quiz. Final score:", this.score);
 
+        // Save play date
+        localStorage.setItem('lastQuizPlay', new Date().toISOString());
+        
         this.showScreen('resultScreen');
         this.displayResults();
-        this.saveQuizData();
     }
 
     // Display results
     displayResults() {
         document.getElementById('finalScore').textContent = this.score;
-        document.getElementById('summaryName').textContent = this.userInfo.name;
-        document.getElementById('summaryScore').textContent = this.score;
-        document.getElementById('summaryState').textContent = document.getElementById('state').options[document.getElementById('state').selectedIndex].text;
-
+        
         // Result message based on score
         let message = '';
+        let congrats = '';
 
         if (this.score >= 80) {
-            message = 'Excellent! You have great Islamic knowledge. 🎉';
+            message = 'ماشاءاللہ! آپ کا اسلامی علم بہت عمدہ ہے۔ 🎉';
+            congrats = 'بہت مبارک ہو! آپ نے شاندار کارکردگی دکھائی۔';
         } else if (this.score >= 60) {
-            message = 'Good job! Your Islamic knowledge is impressive. 👍';
+            message = 'بہت خوب! آپ کا اسلامی علم قابل تعریف ہے۔ 👍';
+            congrats = 'مبارک ہو! آپ کی کارکردگی بہت اچھی ہے۔';
         } else if (this.score >= 40) {
-            message = 'Fair! Keep learning more about Islam. 📚';
+            message = 'اچھا ہے! اسلامی علم میں مزید اضافہ کریں۔ 📚';
+            congrats = 'کوشش جاری رکھیں، آپ بہتر کر سکتے ہیں۔';
         } else {
-            message = 'Keep studying! Islam has vast knowledge to explore. 🌟';
+            message = 'مطالعہ جاری رکھیں! اسلام میں علم کا سمندر ہے۔ 🌟';
+            congrats = 'کوشش کرتے رہیں، انشاءاللہ آپ بہتر کریں گے۔';
         }
 
-        document.getElementById('resultMessage').textContent = message;
+        document.getElementById('resultMessage').innerHTML = `
+            <h3>${congrats}</h3>
+            <p>${message}</p>
+            <p><strong>آپ کا اسکور: ${this.score}/100</strong></p>
+        `;
 
         // Update leaderboard
         this.updateLeaderboard();
@@ -278,66 +280,87 @@ class Quiz {
 
     // Update leaderboard
     updateLeaderboard() {
-        const leaderboard = document.getElementById('leaderboard');
-        leaderboard.innerHTML = `
+        // Get existing leaderboard or create new
+        let leaderboard = JSON.parse(localStorage.getItem('quizLeaderboard') || '[]');
+        
+        // Add current score (without name for now)
+        leaderboard.push({
+            score: this.score,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Sort by score (descending) and keep top 10
+        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard = leaderboard.slice(0, 10);
+        
+        // Save back to localStorage
+        localStorage.setItem('quizLeaderboard', JSON.stringify(leaderboard));
+        
+        // Display leaderboard
+        const leaderboardHTML = leaderboard.map((entry, index) => `
             <div class="leaderboard-item">
-                <span>1. You</span>
-                <span>${this.score} points</span>
+                <span>${index + 1}. ${entry.name || 'User'}</span>
+                <span>${entry.score} points</span>
             </div>
-            <div class="leaderboard-item">
-                <span>2. Ahmad</span>
-                <span>80 points</span>
-            </div>
-            <div class="leaderboard-item">
-                <span>3. Fatima</span>
-                <span>60 points</span>
-            </div>
-        `;
+        `).join('');
+        
+        document.getElementById('leaderboard').innerHTML = leaderboardHTML;
     }
 
-    // Share on WhatsApp
+    // Collect user information after quiz
+    collectUserInfo() {
+        console.log("Collecting user info");
+
+        this.userInfo.name = document.getElementById('fullName').value;
+        this.userInfo.contact = document.getElementById('contactNumber').value;
+        this.userInfo.address = document.getElementById('address').value;
+        this.userInfo.state = document.getElementById('state').value;
+
+        console.log("User info:", this.userInfo);
+
+        if (this.validateUserInfo()) {
+            this.saveQuizData();
+        }
+    }
+
+    // Validate user information
+    validateUserInfo() {
+        if (!this.userInfo.name || !this.userInfo.contact || !this.userInfo.address || !this.userInfo.state) {
+            alert('براہ کرم تمام فیلڈز پُر کریں');
+            return false;
+        }
+        return true;
+    }
+
+    // Share on WhatsApp with custom message
     shareOnWhatsApp() {
-        const message = `I scored ${this.score}% in Islamic Quiz! Test your knowledge too.`;
+        const message = `🌙 *Islamic Quiz Challenge* 🌙
+
+I scored ${this.score}/100 in Islamic Quiz! Can you beat me? 🏆
+
+I challenge you to test your Islamic knowledge! 
+Can you beat my score? 
+
+🔗 Take the quiz here: [Your Website Link]`;
+
         const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
     }
 
     // Share on Facebook
     shareOnFacebook() {
-        const message = `I scored ${this.score}% in Islamic Quiz!`;
+        const message = `🌙 Islamic Quiz Challenge 🌙\n\nI scored ${this.score}/100 in Islamic Quiz! Can you beat me? 🏆`;
         const url = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
     }
 
     // Download Score as Image
     downloadScoreImage() {
-        alert("Download feature would work with html2canvas library");
-        // For actual implementation, include html2canvas library
-        // html2canvas(document.querySelector('.result-card')).then(canvas => {
-        //     const link = document.createElement('a');
-        //     link.download = `islamic-quiz-score-${this.score}.png`;
-        //     link.href = canvas.toDataURL();
-        //     link.click();
-        // });
+        // This requires html2canvas library
+        alert("تصویر ڈاؤن لوڈ کرنے کے لیے html2canvas لائبریری شامل کریں");
     }
 
-    // Restart quiz
-    restartQuiz() {
-        console.log("Restarting quiz");
-        this.currentQuestion = 0;
-        this.score = 0;
-        this.userInfo = { name: '', contact: '', address: '', state: '' };
-
-        // Clear form fields
-        document.getElementById('fullName').value = '';
-        document.getElementById('contactNumber').value = '';
-        document.getElementById('address').value = '';
-        document.getElementById('state').value = '';
-
-        this.showScreen('welcomeScreen');
-    }
-
-    // Save quiz data
+    // Save quiz data to Google Sheets
     saveQuizData() {
         const quizData = {
             name: this.userInfo.name,
@@ -355,7 +378,55 @@ class Quiz {
 
     // Send data to Google Sheets
     sendToGoogleSheets(quizData) {
-        console.log('Data to be sent to Google Sheets:', quizData);
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbykadcKkBOa8CP6CmPcffQqZ4qu1K5j0h2hZKJ8qFm7lJ0DrC3jEw5tfY_EFY0m81Rw/exec';
+        
+        // Show loading
+        const submitBtn = document.querySelector('#userInfoForm button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Saving...';
+        submitBtn.disabled = true;
+
+        fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify(quizData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert('آپ کی معلومات کامیابی سے محفوظ ہو گئی ہیں! شکریہ۔');
+            
+            // Update leaderboard with name
+            this.updateLeaderboardWithName();
+            
+            // Reset button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('ڈیٹا محفوظ کرنے میں مسئلہ ہوا۔ براہ کرم دوبارہ کوشش کریں۔');
+            
+            // Reset button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+    }
+
+    // Update leaderboard with user name
+    updateLeaderboardWithName() {
+        let leaderboard = JSON.parse(localStorage.getItem('quizLeaderboard') || '[]');
+        if (leaderboard.length > 0) {
+            // Find the latest entry and add name
+            const latestEntry = leaderboard[leaderboard.length - 1];
+            latestEntry.name = this.userInfo.name;
+            localStorage.setItem('quizLeaderboard', JSON.stringify(leaderboard));
+            
+            // Refresh leaderboard display
+            this.updateLeaderboard();
+        }
     }
 }
 
