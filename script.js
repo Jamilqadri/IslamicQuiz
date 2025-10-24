@@ -259,7 +259,7 @@ ${challengeText}
 I challenge you to test your Islamic knowledge! 
 Can you beat my score? 
 
-🔗 Take the quiz here: ${currentURL}
+🔗 Take the quiz here: https://alkunooz.in/islamic-quiz/
 
 #IslamicQuiz #ChallengeAccepted #AlKunooz`;
 
