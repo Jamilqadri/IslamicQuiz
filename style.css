@@ -335,3 +335,17 @@ body {
         font-size: 2rem;
     }
 }
+/* User Info Form in Results */
+.user-info-form {
+    background: var(--light-bg);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.user-info-form h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--dark-green);
+}
